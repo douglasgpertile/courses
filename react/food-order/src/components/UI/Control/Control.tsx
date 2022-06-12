@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, forwardRef } from "react";
 import classes from "./Control.module.css";
 
 interface Props {
@@ -13,13 +13,13 @@ interface Props {
   };
 }
 
-const Control: FC<Props> = ({ label, control }) => {
+const Control = forwardRef<HTMLInputElement, Props>((props, ref) => {
   return (
     <div className={classes.input}>
-      <label htmlFor={control.id}>{label}</label>
-      <input {...control} />
+      <label htmlFor={props.control.id}>{props.label}</label>
+      <input ref={ref} {...props.control} />
     </div>
   );
-};
+});
 
 export default Control;

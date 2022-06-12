@@ -2,6 +2,8 @@ import { FC, Fragment, MouseEventHandler, PropsWithChildren } from "react";
 import { createPortal } from "react-dom";
 import classes from "./Modal.module.css";
 
+const portalElement: Element = document.getElementById("overlays") as Element;
+
 const Backdrop: FC<{ onClose: () => void }> = ({ onClose }) => {
   const clickHandler: MouseEventHandler = (e) => {
     e.preventDefault();
@@ -20,7 +22,6 @@ const ModalOverlay: FC<PropsWithChildren> = (props) => {
   );
 };
 
-const portalElement: Element = document.getElementById("overlays") as Element;
 
 const Modal: FC<PropsWithChildren & { onClose: () => void }> = ({
   onClose,

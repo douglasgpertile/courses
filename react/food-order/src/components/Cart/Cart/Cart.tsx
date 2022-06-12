@@ -1,5 +1,8 @@
 import { Modal } from "components/UI";
-import { FC, MouseEventHandler } from "react";
+import { CartItemModel } from "models/CartItem";
+import { FC, MouseEventHandler, useContext } from "react";
+import { CartContext } from "store/CartContext";
+import CartItem from "../CartItem/CartItem";
 import classes from "./Cart.module.css";
 
 interface Props {
@@ -7,27 +10,42 @@ interface Props {
 }
 
 const Cart: FC<Props> = ({ onClose }) => {
-  const cartItems = [{ id: "id", name: "sushi", amount: 2, price: 12.99 }].map(
-    toCartItem
-  );
+  const cartContext = useContext(CartContext);
 
-  const closeHandler: MouseEventHandler = (e) => {
+  const clickHandler: MouseEventHandler = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     onClose();
   };
 
+  const addItemHandler = (item: CartItemModel) => {
+    cartContext.addItem(item);
+  };
+  
+  const removeItemHandler = (id: string) => {
+    cartContext.removeItem(id);
+  };
+
+  const cartItems = cartContext.itens.map(i => (
+    <CartItem 
+      key={i.id}
+      item={i}
+      onAdd={addItemHandler}
+      onRemove={removeItemHandler}
+    />
+  ));
+
   return (
     <Modal onClose={onClose}>
-      <ul className={classes["cart-item"]}></ul>
-      {cartItems}
+      <ul className={classes["cart-items"]}>{cartItems}</ul>
+
       <div className={classes.total}>
         <span>Total Amount</span>
-        <span>35.62</span>
+        <span>${cartContext.totalAmount.toFixed(2)}</span>
       </div>
       <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={closeHandler}>
+        <button className={classes["button--alt"]} onClick={clickHandler}>
           Close
         </button>
         <button className={classes.button}>Order</button>
@@ -35,12 +53,5 @@ const Cart: FC<Props> = ({ onClose }) => {
     </Modal>
   );
 };
-
-const toCartItem = (item: {
-  id: string;
-  name: string;
-  amount: number;
-  price: number;
-}) => <li>{item.name}</li>;
 
 export default Cart;
