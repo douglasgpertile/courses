@@ -5,11 +5,11 @@ let greeting person =
 let isValidName person =
     String.IsNullOrWhiteSpace person
     |> not
-    
+
 let filterInvalidNames names =
     names
     |> Array.filter isValidName
-    
+
 let capitalizeNames names =
     names
     |> Array.map Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase
